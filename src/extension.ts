@@ -4,15 +4,17 @@ export function activate(context: vscode.ExtensionContext) {
     // Registering the command
     let disposable = vscode.commands.registerCommand('extension.moveImportsToTop', moveImportsToTop);
     context.subscriptions.push(disposable);
+    const supportedLanguages = ['javascript', 'typescript', 'javascriptreact', 'typescriptreact'];
 
-    // Registering the code action provider for 'javascript' (you can add more languages as needed)
-    context.subscriptions.push(
-        vscode.languages.registerCodeActionsProvider(
-            { language: 'javascript', scheme: 'file' }, 
-            new MoveImportsToTopActionProvider(),
-            { providedCodeActionKinds: MoveImportsToTopActionProvider.providedCodeActionKinds }
-        )
-    );
+    supportedLanguages.forEach(lang => {
+        context.subscriptions.push(
+            vscode.languages.registerCodeActionsProvider(
+                { language: lang, scheme: 'file' },
+                new MoveImportsToTopActionProvider(),
+                { providedCodeActionKinds: MoveImportsToTopActionProvider.providedCodeActionKinds }
+            )
+        );
+    });
 }
 
 export function deactivate() {}
